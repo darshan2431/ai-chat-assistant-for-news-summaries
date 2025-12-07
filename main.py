@@ -1,12 +1,39 @@
-# AI Chat Assistant for News Summaries - Prototype
-# Created by Darshan N
+import re
 
-def summarize(text):
-    # Simple placeholder summary logic
-    words = text.split()
-    return " ".join(words[:20]) + "..."
+def clean_text(text):
+    text = text.replace("\n", " ")
+    text = re.sub(r"\s+", " ", text)
+    return text.strip()
 
-print("📰 AI Chat Assistant for News Summaries")
-sample_text = "OpenAI has announced new AI models that improve efficiency and understanding."
-print("Summary:", summarize(sample_text))
-print("Chatbot Response: This article discusses advancements in AI models by OpenAI.")
+def split_sentences(text):
+    sentences = re.split(r'(?<=[.!?]) +', text)
+    return [s.strip() for s in sentences if s.strip()]
+
+def summarize(text, max_sentences=3):
+    text = clean_text(text)
+    sentences = split_sentences(text)
+
+    if len(sentences) <= max_sentences:
+        return text
+
+    # simple sentence scoring (longer sentence = more information)
+    scored = sorted(sentences, key=len, reverse=True)
+    summary = scored[:max_sentences]
+    summary = [s for s in sentences if s in summary]
+
+    return " ".join(summary)
+
+if __name__ == "__main__":
+    print("Paste your article below. Press ENTER twice to summarize.\n")
+
+    lines = []
+    while True:
+        line = input()
+        if line.strip() == "":
+            break
+        lines.append(line)
+
+    article = "\n".join(lines)
+    result = summarize(article)
+    print("\n--- SUMMARY ---\n")
+    print(result)
