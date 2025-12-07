@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 def clean_text(text):
     text = text.replace("\n", " ")
@@ -9,18 +10,35 @@ def split_sentences(text):
     sentences = re.split(r'(?<=[.!?]) +', text)
     return [s.strip() for s in sentences if s.strip()]
 
-def summarize(text, max_sentences=3):
+def build_word_freq(text):
+    # very simple word frequency dictionary
+    text = text.lower()
+    words = re.findall(r'\w+', text)
+    stopwords = {"the", "is", "and", "a", "an", "to", "of", "in", "on", "for", "this", "that", "it", "as"}
+    words = [w for w in words if w not in stopwords]
+    return Counter(words)
+
+def summarize(text, max_sentences=2):
     text = clean_text(text)
     sentences = split_sentences(text)
 
     if len(sentences) <= max_sentences:
         return text
 
-    # simple sentence scoring (longer sentence = more information)
-    scored = sorted(sentences, key=len, reverse=True)
-    summary = scored[:max_sentences]
-    summary = [s for s in sentences if s in summary]
+    word_freq = build_word_freq(text)
 
+    # score each sentence by sum of word frequencies
+    sentence_scores = {}
+    for sent in sentences:
+        words = re.findall(r'\w+', sent.lower())
+        score = sum(word_freq.get(w, 0) for w in words)
+        sentence_scores[sent] = score
+
+    # pick top N sentences
+    top_sentences = sorted(sentence_scores, key=sentence_scores.get, reverse=True)[:max_sentences]
+
+    # keep them in original order
+    summary = [s for s in sentences if s in top_sentences]
     return " ".join(summary)
 
 if __name__ == "__main__":
