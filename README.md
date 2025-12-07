@@ -8,8 +8,6 @@ Built for quick summarization and learning NLP basics, ideal for command-line us
 ## 🔍 Overview
 This project takes in raw news text from the user, processes it, splits it into sentences, and generates a concise summary using a simple extractive approach.
 
-The goal of this project is to learn text processing, sentence extraction techniques and summarization fundamentals.
-
 ---
 
 ## ✨ Features
@@ -22,22 +20,23 @@ The goal of this project is to learn text processing, sentence extraction techni
 
 ## 🛠 Tech Stack
 - **Language:** Python
-- **Libraries Used:** `re` (for text cleaning)
+- **Libraries:** re
 - **Tools:** VS Code / Terminal
 
 ---
 
 ## 📌 How It Works
-1. User pastes an article into the console
-2. Text is cleaned and split into sentences
-3. Longer & more informative sentences are selected
-4. Summary is printed on output
+1. User pastes an article into console  
+2. Text is cleaned + split into sentences  
+3. Important sentences are selected  
+4. Output summary is shown  
 
 ---
 
-## 🚀 Running the App
+## 🚀 Run locally
 
 ```bash
 python main.py
+
 
 
